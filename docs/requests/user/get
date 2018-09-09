@@ -1,0 +1,2 @@
+cd http://localhost:8000/api/user
+X-Access-Token:navin

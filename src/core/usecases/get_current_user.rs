@@ -2,7 +2,7 @@ use core::types::user::*;
 use core::types::io::get_current_user::*;
 
 pub fn get_current_user(
-    req: &mut User,
+    user: User,
 ) -> Result<CurrentUserOutput, CurrentUserError>
 {
     let user = User {

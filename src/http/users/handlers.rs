@@ -12,6 +12,6 @@ fn current_user_handler(
 ) -> ApiResult<CurrentUserOutput, CurrentUserError> {
     println!("{:?}", user);
     ApiResult(get_current_user(
-        &mut user,
+        user,
     ))
 }

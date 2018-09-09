@@ -1,12 +1,14 @@
+use db::schema::users;
+
 #[derive(Queryable, Identifiable, Debug)]
 #[table_name = "users"]
 #[primary_key(id)]
 pub struct QueryUser {
-    pub id: u64,
+    pub id: u32,
     pub email: String,
+    pub username: String,
     pub password: String,
-    pub email: String,
-    pub bio: String,
+    pub bio: Option<String>,
     pub image: String,
     pub token: String,
     pub created_at: u64,

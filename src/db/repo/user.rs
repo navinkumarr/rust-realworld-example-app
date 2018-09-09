@@ -2,7 +2,6 @@ use core::types::user::*;
 use diesel::prelude::*;
 use db::models::user::*;
 use db::pool::*;
-use diesel;
 use core::types::RepoError;
 use db::schema::*;
 
@@ -23,7 +22,7 @@ impl<'a> UserRepo for MysqlUserRepo<'a> {
     ) -> Result<Option<User>, RepoError> {
         let mut result_users = users::table
             .filter(users::email.eq(&email))
-            .load::<QueryUser>(&self.db_conn)?;
+            .load::<QueryUser>(&*self.db_conn.master)?;
 
         if result_users.len() > 0 {
             let m = result_users.pop().unwrap();
@@ -31,7 +30,7 @@ impl<'a> UserRepo for MysqlUserRepo<'a> {
                 username : m.username,
                 email : m.email,
                 token : m.token,
-                bio : m.bio,
+                bio : m.bio.unwrap_or(String::from("")),
                 image : m.image,
             }))
         } else {

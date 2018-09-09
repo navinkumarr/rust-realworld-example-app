@@ -43,6 +43,16 @@ impl<'r> Responder<'r> for ApiResult<CurrentUserOutput, CurrentUserError> {
                             error_type: String::from("RepoError"),
                         },
                     },
+                    CurrentUserError::InvalidInput(message) => ErrorWrapper {
+                        error: ErrorDetails {
+                            status: 400,
+                            message: String::from(message),
+                            message_shortcode: String::from("invalid_input"),
+                            datetime: date.format("%Y%m%d%H%M%S").to_string(),
+                            url: String::from(req.uri().as_str()),
+                            error_type: String::from("IncompleteOrInvalidParameterException"),
+                        },
+                    },
                 };
                 build.merge(
                     response::content::Json(serde_json::to_string(&err_response)).respond_to(req)?,

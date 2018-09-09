@@ -1,3 +1,5 @@
+use core::types::RepoError;
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct User {
     pub username : String,
@@ -17,4 +19,8 @@ impl User {
 			image : String::from(""),
 		}
 	}
+}
+
+pub trait UserRepo {
+    fn find_user_by_email(&self, email: String) -> Result<Option<User>, RepoError>;
 }
