@@ -3,6 +3,7 @@ use http::users::handlers::*;
 use http::errors::handlers::*;
 use settings::Settings;
 use rocket::Rocket;
+use db::init_db;
 
 pub struct ApiResult<R, E>(pub Result<R, E>);
 
@@ -12,8 +13,9 @@ pub fn main(settings: Settings) {
 
 pub fn rocket(settings: Settings) -> Rocket {
     rocket::ignite()
+        .manage(init_db(&settings.database))
         .manage(settings)
-        .mount("/api/user", routes![current_user_handler])
+        .mount("/api/user", routes![current_user_handler, register_user_handler])
         .catch(catchers![
             not_found,
             unauthenticated,

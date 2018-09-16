@@ -1,0 +1,4 @@
+cd http://localhost:8000/api/user
+email=navin.sing@gmail.com
+username=navin
+X-Access-Token:navin

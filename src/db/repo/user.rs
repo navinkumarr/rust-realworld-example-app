@@ -4,6 +4,7 @@ use db::models::user::*;
 use db::pool::*;
 use core::types::RepoError;
 use db::schema::*;
+use diesel;
 
 pub struct MysqlUserRepo<'a> {
     db_conn: &'a DbConn,
@@ -38,4 +39,22 @@ impl<'a> UserRepo for MysqlUserRepo<'a> {
         }
     }
 
+    fn save_new_user(
+        &self,
+        new_user: &NewUser,
+    ) -> Result<usize, RepoError> {
+        let token: String = String::from("navin");
+
+        let data_users = InsertUser {
+            username: new_user.username.clone(),
+            email: new_user.email.clone(),
+            token: token,
+        };
+
+        let result_users = diesel::insert_into(users::table)
+            .values(&data_users)
+            .execute(&*self.db_conn.master)?;
+
+        Ok(result_users)
+    }
 }

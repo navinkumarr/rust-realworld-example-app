@@ -14,3 +14,11 @@ pub struct QueryUser {
     pub created_at: u64,
     pub updated_at: u64,
 }
+
+#[derive(Insertable, Debug)]
+#[table_name = "users"]
+pub struct InsertUser {
+    pub email: String,
+    pub username: String,
+    pub token: String,
+}
