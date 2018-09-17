@@ -31,9 +31,9 @@ impl<'a> UserRepo for MysqlUserRepo<'a> {
             Ok(Some(User {
                 username : m.username,
                 email : m.email,
-                token : m.token,
+                token : m.token.unwrap_or(String::from("")),
                 bio : m.bio.unwrap_or(String::from("")),
-                image : m.image,
+                image : m.image.unwrap_or(String::from("")),
             }))
         } else {
             Ok(None)
@@ -49,14 +49,11 @@ impl<'a> UserRepo for MysqlUserRepo<'a> {
             .to_string()
             .parse::<u64>()
             .unwrap();
-        let token: String = String::from("navin");
 
         let data_users = InsertUser {
             username: new_user.username.clone(),
             email: new_user.email.clone(),
             password: new_user.password.clone(),
-            token: token,
-            image: String::from("defaultimage"),
             created_at: date_time,
             updated_at: date_time
         };

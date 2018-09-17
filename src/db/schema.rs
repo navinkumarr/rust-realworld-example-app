@@ -63,8 +63,8 @@ table! {
         email -> Varchar,
         password -> Varchar,
         bio -> Nullable<Varchar>,
-        image -> Varchar,
-        token -> Varchar,
+        image -> Nullable<Varchar>,
+        token -> Nullable<Varchar>,
         created_at -> Unsigned<Bigint>,
         updated_at -> Unsigned<Bigint>,
     }

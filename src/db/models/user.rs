@@ -9,8 +9,8 @@ pub struct QueryUser {
     pub username: String,
     pub password: String,
     pub bio: Option<String>,
-    pub image: String,
-    pub token: String,
+    pub image: Option<String>,
+    pub token: Option<String>,
     pub created_at: u64,
     pub updated_at: u64,
 }
@@ -21,9 +21,6 @@ pub struct InsertUser {
     pub email: String,
     pub username: String,
     pub password: String,
-    //@TODO: make token and image optional
-    pub token: String,
-    pub image: String,
     pub created_at: u64,
     pub updated_at: u64,
 }
