@@ -24,6 +24,7 @@ pub struct CurrentUserResponse {
 pub struct RegisterUserRequest {
     pub email: String,
     pub username: String,
+    pub password: String,
 }
 
 impl From<RegisterUserRequest> for RegisterUserInput {
@@ -31,6 +32,7 @@ impl From<RegisterUserRequest> for RegisterUserInput {
         RegisterUserInput {
             email: req.email,
             username: req.username,
+            password: req.password,
         }
     }
 }

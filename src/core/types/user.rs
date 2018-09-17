@@ -13,6 +13,7 @@ pub struct User {
 pub struct NewUser {
     pub username : String,
     pub email : String,
+    pub password : String,
 }
 
 impl User {

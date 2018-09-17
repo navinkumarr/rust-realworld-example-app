@@ -7,6 +7,7 @@ use core::types::user::*;
 pub struct RegisterUserInput {
     pub username: String,
     pub email: String,
+    pub password: String,
 }
 
 #[derive(Debug, Serialize)]

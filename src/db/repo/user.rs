@@ -5,6 +5,7 @@ use db::pool::*;
 use core::types::RepoError;
 use db::schema::*;
 use diesel;
+use chrono::Local;
 
 pub struct MysqlUserRepo<'a> {
     db_conn: &'a DbConn,
@@ -43,12 +44,21 @@ impl<'a> UserRepo for MysqlUserRepo<'a> {
         &self,
         new_user: &NewUser,
     ) -> Result<usize, RepoError> {
+        let date = Local::now();
+        let date_time = date.format("%Y%m%d%H%M%S")
+            .to_string()
+            .parse::<u64>()
+            .unwrap();
         let token: String = String::from("navin");
 
         let data_users = InsertUser {
             username: new_user.username.clone(),
             email: new_user.email.clone(),
+            password: new_user.password.clone(),
             token: token,
+            image: String::from("defaultimage"),
+            created_at: date_time,
+            updated_at: date_time
         };
 
         let result_users = diesel::insert_into(users::table)

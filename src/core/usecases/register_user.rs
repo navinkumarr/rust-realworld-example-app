@@ -11,6 +11,7 @@ where
     let user = NewUser {
         username : register_user_input.username,
         email : register_user_input.email,
+        password : register_user_input.password,
     };
     
     let data = user_repo.save_new_user(&user)?;
