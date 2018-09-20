@@ -16,6 +16,12 @@ pub struct NewUser {
     pub password : String,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct LoginUser {
+    pub email : String,
+    pub password : String,
+}
+
 impl User {
 	pub fn new() -> User {
 		User{
@@ -31,4 +37,5 @@ impl User {
 pub trait UserRepo {
     fn find_user_by_email(&self, email: String) -> Result<Option<User>, RepoError>;
     fn save_new_user(&self, new_user: &NewUser) -> Result<usize, RepoError>;
+    fn find_user_by_credentials(&self, credentials: &LoginUser) -> Result<Option<User>, RepoError>;
 }

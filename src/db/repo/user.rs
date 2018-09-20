@@ -64,4 +64,27 @@ impl<'a> UserRepo for MysqlUserRepo<'a> {
 
         Ok(result_users)
     }
+
+    fn find_user_by_credentials(
+        &self,
+        credentials: &LoginUser,
+    ) -> Result<Option<User>, RepoError> {
+        let mut result_users = users::table
+            .filter(users::email.eq(&credentials.email))
+            .filter(users::password.eq(&credentials.password))
+            .load::<QueryUser>(&*self.db_conn.master)?;
+
+        if result_users.len() > 0 {
+            let m = result_users.pop().unwrap();
+            Ok(Some(User {
+                username : m.username,
+                email : m.email,
+                token : m.token.unwrap_or(String::from("")),
+                bio : m.bio.unwrap_or(String::from("")),
+                image : m.image.unwrap_or(String::from("")),
+            }))
+        } else {
+            Ok(None)
+        }
+    }
 }

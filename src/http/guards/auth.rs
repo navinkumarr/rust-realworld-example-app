@@ -4,6 +4,8 @@ use rocket::{Outcome, Request, State};
 use std::collections::HashMap;
 use core::types::user::User;
 
+use frank_jwt::{Algorithm, encode, decode};
+
 impl<'a, 'r> FromRequest<'a, 'r> for User {
     type Error = ();
 
