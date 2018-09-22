@@ -14,7 +14,7 @@ use db::{DbConn, MysqlUserRepo};
 fn current_user_handler(
     user: User,
     db: DbConn,
-    settings: State<Settings>,
+    _settings: State<Settings>,
 ) -> ApiResult<CurrentUserOutput, CurrentUserError> {
     println!("{:?}", user);
     let user_repo = MysqlUserRepo::new(&db);
@@ -28,7 +28,7 @@ fn current_user_handler(
 fn register_user_handler(
     register_user_input: Result<RegisterUserInput, RegisterUserError>,
     db: DbConn,
-    settings: State<Settings>,
+    _settings: State<Settings>,
 ) -> ApiResult<RegisterUserOutput, RegisterUserError> {
 
     if let Err(err) = register_user_input {
@@ -46,7 +46,7 @@ fn register_user_handler(
 fn login_user_handler(
     login_user_input: Result<LoginUserInput, LoginUserError>,
     db: DbConn,
-    settings: State<Settings>,
+    _settings: State<Settings>,
 ) -> ApiResult<LoginUserOutput, LoginUserError> {
 
     if let Err(err) = login_user_input {

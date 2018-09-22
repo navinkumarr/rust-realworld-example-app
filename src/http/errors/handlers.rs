@@ -5,7 +5,7 @@ use http::errors::io::*;
 use chrono::Local;
 
 #[catch(400)]
-pub fn bad_request(err: Error, req: &Request) -> Json<ErrorWrapper> {
+pub fn bad_request(_err: Error, req: &Request) -> Json<ErrorWrapper> {
     let date = Local::now();
     Json(ErrorWrapper {
         error: ErrorDetails {
