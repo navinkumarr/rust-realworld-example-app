@@ -34,6 +34,11 @@ pub struct LoginUserRequest {
     pub password: String,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+pub struct LoginUserRequestWrapper {
+    pub user: LoginUserRequest,
+}
+
 impl From<RegisterUserRequest> for RegisterUserInput {
     fn from(req: RegisterUserRequest) -> RegisterUserInput {
         RegisterUserInput {
@@ -120,7 +125,7 @@ impl<'r> Responder<'r> for ApiResult<CurrentUserOutput, CurrentUserError> {
 impl FromData for LoginUserInput {
     type Error = LoginUserError;
     fn from_data(req: &Request, data: Data) -> data::Outcome<LoginUserInput, Self::Error> {
-        let unwrapped_json = Json::<LoginUserRequest>::from_data(&req, data);
+        let unwrapped_json = Json::<LoginUserRequestWrapper>::from_data(&req, data);
 
         if let Outcome::Failure(error) = unwrapped_json {
             let (_, serde_error) = error;
@@ -131,7 +136,7 @@ impl FromData for LoginUserInput {
             ));
         }
 
-        let json = unwrapped_json.unwrap().0;
+        let json = unwrapped_json.unwrap().0.user;
         let payload = LoginUserInput::from(json);
         Outcome::Success(payload)
     }
