@@ -1,5 +1,6 @@
 use diesel::result::Error as DieselError;
 use std::error::Error as StdError;
+use jwt::Error as JWTError;
 use core::types::RepoError;
 
 mod models;
@@ -13,5 +14,12 @@ impl From<DieselError> for RepoError {
     }
 }
 
+impl From<JWTError> for RepoError {
+    fn from(e: JWTError) -> RepoError {
+        RepoError::RepoError(String::from("Failed creating token"))
+    }
+}
+
 pub use self::pool::*;
 pub use self::repo::user::MysqlUserRepo;
+pub use self::repo::token::MysqlTokenRepo;

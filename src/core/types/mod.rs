@@ -3,6 +3,7 @@ use std::fmt;
 
 pub mod user;
 pub mod io;
+pub mod token;
 
 #[derive(Debug, Serialize)]
 pub enum RepoError {

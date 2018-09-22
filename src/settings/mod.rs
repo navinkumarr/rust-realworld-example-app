@@ -9,6 +9,8 @@ pub struct Database {
 #[derive(Debug, Deserialize)]
 pub struct Auth {
     pub secret: String,
+    pub issuer: String,
+    pub expiry: i64,
 }
 
 #[derive(Debug, Deserialize)]

@@ -3,3 +3,5 @@ database_url= "mysql://root:root@127.0.0.1:3306/realworld_example_app"
 
 [auth]
 secret= "realworld"
+issuer= "realworld"
+expiry= 2400

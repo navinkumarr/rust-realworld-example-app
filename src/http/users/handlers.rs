@@ -8,7 +8,7 @@ use core::usecases::login_user::*;
 use core::types::io::get_current_user::*;
 use core::types::io::register_user::*;
 use core::types::io::login_user::*;
-use db::{DbConn, MysqlUserRepo};
+use db::{DbConn, MysqlUserRepo, MysqlTokenRepo};
 
 #[get("/", format = "application/json")]
 fn current_user_handler(
@@ -46,7 +46,7 @@ fn register_user_handler(
 fn login_user_handler(
     login_user_input: Result<LoginUserInput, LoginUserError>,
     db: DbConn,
-    _settings: State<Settings>,
+    settings: State<Settings>,
 ) -> ApiResult<LoginUserOutput, LoginUserError> {
 
     if let Err(err) = login_user_input {
@@ -54,8 +54,11 @@ fn login_user_handler(
     }
 
     let user_repo = MysqlUserRepo::new(&db);
+    let token_repo = MysqlTokenRepo::new(&db, &settings.auth);
+
     ApiResult(login_user(
         login_user_input.unwrap(),
         &user_repo,
+        &token_repo,
     ))
 }
