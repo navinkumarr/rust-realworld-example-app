@@ -1,7 +1,7 @@
 use settings::Settings;
 use rocket::State;
 use http::api::ApiResult;
-use core::types::user::User;
+use core::types::user::CurrentUser;
 use core::usecases::get_current_user::*;
 use core::usecases::register_user::*;
 use core::usecases::login_user::*;
@@ -12,14 +12,14 @@ use db::{DbConn, MysqlUserRepo, MysqlTokenRepo};
 
 #[get("/", format = "application/json")]
 fn current_user_handler(
-    user: User,
+    current_user: CurrentUser,
     db: DbConn,
     _settings: State<Settings>,
 ) -> ApiResult<CurrentUserOutput, CurrentUserError> {
-    println!("{:?}", user);
+    println!("{:?}", current_user);
     let user_repo = MysqlUserRepo::new(&db);
     ApiResult(get_current_user(
-        user,
+        current_user,
         &user_repo,
     ))
 }

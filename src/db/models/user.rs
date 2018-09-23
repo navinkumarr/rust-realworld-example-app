@@ -3,10 +3,11 @@ use db::schema::users;
 #[derive(Queryable, Identifiable, Debug)]
 #[table_name = "users"]
 #[primary_key(id)]
+// Sequence of keys should be same as columns numbers
 pub struct QueryUser {
     pub id: u32,
-    pub email: String,
     pub username: String,
+    pub email: String,
     pub password: String,
     pub bio: Option<String>,
     pub image: Option<String>,

@@ -20,7 +20,7 @@ impl<'a> MysqlUserRepo<'a> {
 impl<'a> UserRepo for MysqlUserRepo<'a> {
     fn find_user_by_email(
         &self,
-        email: String,
+        email: &String,
     ) -> Result<Option<User>, RepoError> {
         let mut result_users = users::table
             .filter(users::email.eq(&email))
@@ -31,9 +31,37 @@ impl<'a> UserRepo for MysqlUserRepo<'a> {
             Ok(Some(User {
                 username : m.username,
                 email : m.email,
-                token : m.token.unwrap_or(String::from("")),
-                bio : m.bio.unwrap_or(String::from("")),
-                image : m.image.unwrap_or(String::from("")),
+                password : m.password,
+                token : m.token,
+                bio : m.bio,
+                image : m.image,
+            }))
+        } else {
+            Ok(None)
+        }
+    }
+
+    fn find_user_by_username(
+        &self,
+        username: &String,
+    ) -> Result<Option<User>, RepoError> {
+        let query = users::table
+            .filter(users::username.eq(username));
+        let mut result_users = query.load::<QueryUser>(&*self.db_conn.master)?;
+
+        // let debug = diesel::debug_query::<diesel::mysql::Mysql, _>(&query);
+        // let debug = format!("{:?}", debug);
+        // println!("{:?}", debug);
+
+        if result_users.len() > 0 {
+            let m = result_users.pop().unwrap();
+            Ok(Some(User {
+                username : m.username,
+                email : m.email,
+                password : m.password,
+                token : m.token,
+                bio : m.bio,
+                image : m.image,
             }))
         } else {
             Ok(None)
@@ -74,14 +102,17 @@ impl<'a> UserRepo for MysqlUserRepo<'a> {
             .filter(users::password.eq(&credentials.password))
             .load::<QueryUser>(&*self.db_conn.master)?;
 
+        println!("result_users {:?}", result_users);
+
         if result_users.len() > 0 {
             let m = result_users.pop().unwrap();
             Ok(Some(User {
                 username : m.username,
                 email : m.email,
-                token : m.token.unwrap_or(String::from("")),
-                bio : m.bio.unwrap_or(String::from("")),
-                image : m.image.unwrap_or(String::from("")),
+                password : m.password,
+                token : m.token,
+                bio : m.bio,
+                image : m.image,
             }))
         } else {
             Ok(None)

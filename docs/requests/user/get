@@ -1,3 +1,3 @@
-cd http://localhost:8000/api/user
-'Authorization:Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mzc2Mzk0NjMsImlhdCI6MTUzNzYzOTQ2MywiaXNzIjoicmVhbHdvcmxkIiwic3ViIjoibmF2aW4uc2luZ0BnbWFpbC5jb20ifQ==.HwZIyuFHrPE1YMgDtbARp1Y_7A157f6z0qBTB-x5mmA'
+cd http://localhost:8000/api/users/
+'Authorization:Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mzc2OTQwMzAsImlhdCI6MTUzNzY5MTYzMCwiaXNzIjoicmVhbHdvcmxkIiwic3ViIjoibmF2aW4uc2luZ0BnbWFpbC5jb20ifQ==.DSMFqh9IlK2p6XbxzDjN-jOyQDvXq0xy_K2ZAriX9iU='
 X-Access-Token:navin

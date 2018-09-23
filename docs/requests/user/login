@@ -1,4 +1,5 @@
-cd http://localhost:8000/api/user/login
+cd http://localhost:8000/api/users/login
+'user:={"email": "navin.sing@gmail.com", "password": "navin"}'
 email=navin.sing@gmail.com
 password=navin
 X-Access-Token:c2feb3257005418079b368d7328899f84d234e01e25288a0549a71f65ab8d9b3|guest|

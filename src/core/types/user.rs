@@ -1,12 +1,14 @@
 use core::types::RepoError;
 
 #[derive(Debug, Serialize, Deserialize)]
+#[derive(Default)]
 pub struct User {
     pub username : String,
     pub email : String,
-    pub token : String,
-    pub bio : String,
-    pub image : String,
+    pub password : String,
+    pub token : Option<String>,
+    pub bio : Option<String>,
+    pub image : Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -22,20 +24,14 @@ pub struct LoginUser {
     pub password : String,
 }
 
-impl User {
-	pub fn new() -> User {
-		User{
-			username : String::from(""),
-			email : String::from(""),
-			token : String::from(""),
-			bio : String::from(""),
-			image : String::from(""),
-		}
-	}
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CurrentUser {
+    pub username : String,
 }
 
 pub trait UserRepo {
-    fn find_user_by_email(&self, email: String) -> Result<Option<User>, RepoError>;
+    fn find_user_by_email(&self, email: &String) -> Result<Option<User>, RepoError>;
+    fn find_user_by_username(&self, username: &String) -> Result<Option<User>, RepoError>;
     fn save_new_user(&self, new_user: &NewUser) -> Result<usize, RepoError>;
     fn find_user_by_credentials(&self, credentials: &LoginUser) -> Result<Option<User>, RepoError>;
 }
