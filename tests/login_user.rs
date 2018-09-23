@@ -18,7 +18,7 @@ fn login_user() {
       }
     }"#;
     let mut response = client
-        .post("/api/user/login")
+        .post("/api/users/login")
         .header(ContentType::JSON)
         .body(data)
         .dispatch();

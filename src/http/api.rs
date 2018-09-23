@@ -1,5 +1,5 @@
 use rocket;
-use http::users::handlers::*;
+use http::resources::users::handlers::*;
 use http::errors::handlers::*;
 use settings::Settings;
 use rocket::Rocket;
@@ -15,7 +15,7 @@ pub fn rocket(settings: Settings) -> Rocket {
     rocket::ignite()
         .manage(init_db(&settings.database))
         .manage(settings)
-        .mount("/api/user", routes![current_user_handler, register_user_handler, login_user_handler])
+        .mount("/api/users", routes![current_user_handler, register_user_handler, login_user_handler])
         .catch(catchers![
             not_found,
             unauthenticated,

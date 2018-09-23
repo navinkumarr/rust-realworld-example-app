@@ -1,4 +1,4 @@
 pub mod api;
-pub mod users;
+pub mod resources;
 pub mod errors;
 pub mod guards;

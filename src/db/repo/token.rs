@@ -29,9 +29,8 @@ impl<'a> TokenRepo for MysqlTokenRepo<'a> {
             "exp" : Local::now().timestamp() + self.settings.expiry
         });
 
-        let secret = "realworld".to_string();
         let header = json!({});
-        encode(header, &secret, &payload, Algorithm::HS256)
+        encode(header, &self.settings.secret, &payload, Algorithm::HS256)
             .map_err(|e| RepoError::from(e))
     }
 
