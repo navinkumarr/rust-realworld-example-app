@@ -1,6 +1,6 @@
+use db::models::user::{UpdateUser as DbUpdateUser, QueryUser, InsertUser};
 use core::types::user::*;
 use diesel::prelude::*;
-use db::models::user::*;
 use db::pool::*;
 use core::types::RepoError;
 use db::schema::*;
@@ -117,5 +117,35 @@ impl<'a> UserRepo for MysqlUserRepo<'a> {
         } else {
             Ok(None)
         }
+    }
+
+    fn update_user(
+        &self,
+        username: &String,
+        update_user: &UpdateUser,
+    ) -> Result<usize, RepoError> {
+        let date = Local::now();
+        let date_time = date.format("%Y%m%d%H%M%S")
+            .to_string()
+            .parse::<u64>()
+            .unwrap();
+
+        let data_users = DbUpdateUser {
+            username: update_user.username.clone(),
+            email: update_user.email.clone(),
+            password: update_user.password.clone(),
+            bio : update_user.bio.clone(),
+            image : update_user.image.clone(),
+            updated_at: date_time
+        };
+
+        let result_users = diesel::update(
+                users::table
+                .filter(users::username.eq(&username))
+            )
+            .set(&data_users)
+            .execute(&*self.db_conn.master)?;
+
+        Ok(result_users)
     }
 }

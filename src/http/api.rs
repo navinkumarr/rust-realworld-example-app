@@ -15,7 +15,7 @@ pub fn rocket(settings: Settings) -> Rocket {
     rocket::ignite()
         .manage(init_db(&settings.database))
         .manage(settings)
-        .mount("/api/users", routes![current_user_handler, register_user_handler, login_user_handler])
+        .mount("/api/users", routes![current_user_handler, register_user_handler, login_user_handler, update_user_handler])
         .catch(catchers![
             not_found,
             unauthenticated,

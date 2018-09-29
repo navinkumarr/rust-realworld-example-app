@@ -25,3 +25,15 @@ pub struct InsertUser {
     pub created_at: u64,
     pub updated_at: u64,
 }
+
+#[derive(Deserialize, AsChangeset, Default, Clone)]
+#[table_name = "users"]
+pub struct UpdateUser {
+    pub username: Option<String>,
+    pub email: Option<String>,
+    pub bio: Option<String>,
+    pub image: Option<String>,
+    pub password: Option<String>,
+    pub updated_at: u64,
+}
+

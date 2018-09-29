@@ -2,6 +2,7 @@ use core::types::user::User;
 use core::types::io::get_current_user::*;
 use core::types::io::register_user::*;
 use core::types::io::login_user::*;
+use core::types::io::update_user::*;
 use rocket::{Data, Outcome, Request};
 use rocket::http::Status;
 use rocket::data::{self, FromData};
@@ -39,6 +40,20 @@ pub struct LoginUserRequestWrapper {
     pub user: LoginUserRequest,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+pub struct UpdateUserRequest {
+    pub username: Option<String>,
+    pub email: Option<String>,
+    pub bio: Option<String>,
+    pub image: Option<String>,
+    pub password: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct UpdateUserRequestWrapper {
+    pub user: UpdateUserRequest,
+}
+
 impl From<RegisterUserRequest> for RegisterUserInput {
     fn from(req: RegisterUserRequest) -> RegisterUserInput {
         RegisterUserInput {
@@ -54,6 +69,18 @@ impl From<LoginUserRequest> for LoginUserInput {
         LoginUserInput {
             email: req.email,
             password: req.password,
+        }
+    }
+}
+
+impl From<UpdateUserRequest> for UpdateUserInput {
+    fn from(req: UpdateUserRequest) -> UpdateUserInput {
+        UpdateUserInput {
+            email: req.email,
+            password: req.password,
+            bio: req.bio,
+            image: req.image,
+            username: req.username,
         }
     }
 }
@@ -226,6 +253,70 @@ impl<'r> Responder<'r> for ApiResult<LoginUserOutput, LoginUserError> {
                             status: 400,
                             message: String::from("Invalid credentials"),
                             message_shortcode: String::from("invalid_credentials"),
+                            datetime: date.format("%Y%m%d%H%M%S").to_string(),
+                            url: String::from(req.uri().as_str()),
+                            error_type: String::from("IncompleteOrInvalidParameterException"),
+                        },
+                    },
+                };
+                build.merge(
+                    response::content::Json(serde_json::to_string(&err_response)).respond_to(req)?,
+                );
+                build.status(Status::BadRequest).ok()
+            }
+        }
+    }
+}
+
+impl FromData for UpdateUserInput {
+    type Error = UpdateUserError;
+    fn from_data(req: &Request, data: Data) -> data::Outcome<UpdateUserInput, Self::Error> {
+        let unwrapped_json = Json::<UpdateUserRequestWrapper>::from_data(&req, data);
+
+        if let Outcome::Failure(error) = unwrapped_json {
+            let (_, serde_error) = error;
+
+            return Outcome::Failure((
+                Status::from_code(422).unwrap(),
+                UpdateUserError::InvalidInput(serde_error.to_string()),
+            ));
+        }
+
+        let json = unwrapped_json.unwrap().0.user;
+        let payload = UpdateUserInput::from(json);
+        Outcome::Success(payload)
+    }
+}
+
+impl<'r> Responder<'r> for ApiResult<UpdateUserOutput, UpdateUserError> {
+    fn respond_to(self, req: &Request) -> Result<rocket::Response<'r>, Status> {
+        let date = Local::now();
+
+        let mut build = Response::build();
+
+        match self.0 {
+            Ok(output) => {
+                build
+                    .merge(response::content::Json(serde_json::to_string(&output)).respond_to(req)?);
+                build.status(Status::Ok).ok()
+            }
+            Err(err) => {
+                let err_response = match err {
+                    UpdateUserError::RepoError(message) => ErrorWrapper {
+                        error: ErrorDetails {
+                            status: 400,
+                            message: String::from(message),
+                            message_shortcode: String::from("repo_error"),
+                            datetime: date.format("%Y%m%d%H%M%S").to_string(),
+                            url: String::from(req.uri().as_str()),
+                            error_type: String::from("RepoError"),
+                        },
+                    },
+                    UpdateUserError::InvalidInput(message) => ErrorWrapper {
+                        error: ErrorDetails {
+                            status: 400,
+                            message: String::from(message),
+                            message_shortcode: String::from("invalid_input"),
                             datetime: date.format("%Y%m%d%H%M%S").to_string(),
                             url: String::from(req.uri().as_str()),
                             error_type: String::from("IncompleteOrInvalidParameterException"),

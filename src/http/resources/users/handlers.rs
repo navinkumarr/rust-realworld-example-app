@@ -5,9 +5,11 @@ use core::types::user::CurrentUser;
 use core::usecases::get_current_user::*;
 use core::usecases::register_user::*;
 use core::usecases::login_user::*;
+use core::usecases::update_user::*;
 use core::types::io::get_current_user::*;
 use core::types::io::register_user::*;
 use core::types::io::login_user::*;
+use core::types::io::update_user::*;
 use db::{DbConn, MysqlUserRepo, MysqlTokenRepo};
 
 #[get("/", format = "application/json")]
@@ -31,15 +33,14 @@ fn register_user_handler(
     _settings: State<Settings>,
 ) -> ApiResult<RegisterUserOutput, RegisterUserError> {
 
-    if let Err(err) = register_user_input {
-        return ApiResult(Err(err));
-    }
+    ApiResult(register_user_input.and_then(|input| {
+        let user_repo = MysqlUserRepo::new(&db);
+        register_user(
+            input,
+            &user_repo,
+        )
+    }))
 
-    let user_repo = MysqlUserRepo::new(&db);
-    ApiResult(register_user(
-        register_user_input.unwrap(),
-        &user_repo,
-    ))
 }
 
 #[post("/login", format = "application/json", data = "<login_user_input>")]
@@ -49,16 +50,34 @@ fn login_user_handler(
     settings: State<Settings>,
 ) -> ApiResult<LoginUserOutput, LoginUserError> {
 
-    if let Err(err) = login_user_input {
-        return ApiResult(Err(err));
-    }
+    ApiResult(login_user_input.and_then(|input| {
+        let user_repo = MysqlUserRepo::new(&db);
+        let token_repo = MysqlTokenRepo::new(&db, &settings.auth);
 
-    let user_repo = MysqlUserRepo::new(&db);
-    let token_repo = MysqlTokenRepo::new(&db, &settings.auth);
+        login_user(
+            input,
+            &user_repo,
+            &token_repo,
+        )
+    }))
 
-    ApiResult(login_user(
-        login_user_input.unwrap(),
-        &user_repo,
-        &token_repo,
-    ))
+}
+
+#[put("/", format = "application/json", data = "<update_user_input>")]
+fn update_user_handler(
+    current_user: CurrentUser,
+    update_user_input: Result<UpdateUserInput, UpdateUserError>,
+    db: DbConn,
+    _settings: State<Settings>,
+) -> ApiResult<UpdateUserOutput, UpdateUserError> {
+
+    ApiResult(update_user_input.and_then(|input| {
+        let user_repo = MysqlUserRepo::new(&db);
+        update_user(
+            current_user,
+            input,
+            &user_repo,
+        )
+    }))
+
 }
