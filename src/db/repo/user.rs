@@ -2,7 +2,7 @@ use db::models::user::{UpdateUser as DbUpdateUser, QueryUser, InsertUser};
 use core::types::user::*;
 use diesel::prelude::*;
 use db::pool::*;
-use core::types::RepoError;
+use core::types::error::RepoError;
 use db::schema::*;
 use diesel;
 use chrono::Local;

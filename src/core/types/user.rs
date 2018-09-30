@@ -1,4 +1,4 @@
-use core::types::RepoError;
+use core::types::error::RepoError;
 
 #[derive(Debug, Serialize, Deserialize)]
 #[derive(Default)]
@@ -11,12 +11,62 @@ pub struct User {
     pub image : Option<String>,
 }
 
+// -- Current user
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CurrentUser {
+    pub username : String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct CurrentUserInput {
+    pub user: CurrentUser,
+}
+
+#[derive(Debug, Serialize)]
+pub struct CurrentUserOutput {
+    pub user: User,
+}
+
+// -- Login user
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct LoginUser {
+    pub email : String,
+    pub password : String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct LoginUserInput {
+    pub user: LoginUser
+}
+
+#[derive(Debug, Serialize)]
+pub struct LoginUserOutput {
+    pub user: User,
+}
+
+// -- Register user
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NewUser {
     pub username : String,
     pub email : String,
     pub password : String,
 }
+
+
+#[derive(Debug, Deserialize)]
+pub struct RegisterUserInput {
+    pub user: NewUser
+}
+
+#[derive(Debug, Serialize)]
+pub struct RegisterUserOutput {
+    pub user: NewUser,
+}
+
+// -- Update user
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UpdateUser {
@@ -27,15 +77,15 @@ pub struct UpdateUser {
     pub password: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct LoginUser {
-    pub email : String,
-    pub password : String,
+
+#[derive(Debug, Deserialize)]
+pub struct UpdateUserInput {
+    pub user: UpdateUser
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct CurrentUser {
-    pub username : String,
+#[derive(Debug, Serialize)]
+pub struct UpdateUserOutput {
+    pub user: UpdateUser,
 }
 
 pub trait UserRepo {

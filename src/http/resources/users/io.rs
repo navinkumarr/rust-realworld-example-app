@@ -1,8 +1,5 @@
-use core::types::user::User;
-use core::types::io::get_current_user::*;
-use core::types::io::register_user::*;
-use core::types::io::login_user::*;
-use core::types::io::update_user::*;
+use core::types::user::*;
+use core::types::error::*;
 use rocket::{Data, Outcome, Request};
 use rocket::http::Status;
 use rocket::data::{self, FromData};
@@ -16,79 +13,10 @@ use rocket;
 use serde_json;
 use http::api::ApiResult;
 
-//@TODO: Remove unnecessary derive from entire codebase
-#[derive(Serialize, Deserialize, Debug)]
-pub struct CurrentUserResponse {
-    pub user: User,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct RegisterUserRequest {
-    pub email: String,
-    pub username: String,
-    pub password: String,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct LoginUserRequest {
-    pub email: String,
-    pub password: String,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct LoginUserRequestWrapper {
-    pub user: LoginUserRequest,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct UpdateUserRequest {
-    pub username: Option<String>,
-    pub email: Option<String>,
-    pub bio: Option<String>,
-    pub image: Option<String>,
-    pub password: Option<String>,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct UpdateUserRequestWrapper {
-    pub user: UpdateUserRequest,
-}
-
-impl From<RegisterUserRequest> for RegisterUserInput {
-    fn from(req: RegisterUserRequest) -> RegisterUserInput {
-        RegisterUserInput {
-            email: req.email,
-            username: req.username,
-            password: req.password,
-        }
-    }
-}
-
-impl From<LoginUserRequest> for LoginUserInput {
-    fn from(req: LoginUserRequest) -> LoginUserInput {
-        LoginUserInput {
-            email: req.email,
-            password: req.password,
-        }
-    }
-}
-
-impl From<UpdateUserRequest> for UpdateUserInput {
-    fn from(req: UpdateUserRequest) -> UpdateUserInput {
-        UpdateUserInput {
-            email: req.email,
-            password: req.password,
-            bio: req.bio,
-            image: req.image,
-            username: req.username,
-        }
-    }
-}
-
 impl FromData for RegisterUserInput {
     type Error = RegisterUserError;
     fn from_data(req: &Request, data: Data) -> data::Outcome<RegisterUserInput, Self::Error> {
-        let unwrapped_json = Json::<RegisterUserRequest>::from_data(&req, data);
+        let unwrapped_json = Json::<RegisterUserInput>::from_data(&req, data);
 
         if let Outcome::Failure(error) = unwrapped_json {
             let (_, serde_error) = error;
@@ -100,8 +28,7 @@ impl FromData for RegisterUserInput {
         }
 
         let json = unwrapped_json.unwrap().0;
-        let payload = RegisterUserInput::from(json);
-        Outcome::Success(payload)
+        Outcome::Success(json)
     }
 }
 
@@ -152,7 +79,7 @@ impl<'r> Responder<'r> for ApiResult<CurrentUserOutput, CurrentUserError> {
 impl FromData for LoginUserInput {
     type Error = LoginUserError;
     fn from_data(req: &Request, data: Data) -> data::Outcome<LoginUserInput, Self::Error> {
-        let unwrapped_json = Json::<LoginUserRequestWrapper>::from_data(&req, data);
+        let unwrapped_json = Json::<LoginUserInput>::from_data(&req, data);
 
         if let Outcome::Failure(error) = unwrapped_json {
             let (_, serde_error) = error;
@@ -163,9 +90,8 @@ impl FromData for LoginUserInput {
             ));
         }
 
-        let json = unwrapped_json.unwrap().0.user;
-        let payload = LoginUserInput::from(json);
-        Outcome::Success(payload)
+        let json = unwrapped_json.unwrap().0;
+        Outcome::Success(json)
     }
 }
 
@@ -271,7 +197,7 @@ impl<'r> Responder<'r> for ApiResult<LoginUserOutput, LoginUserError> {
 impl FromData for UpdateUserInput {
     type Error = UpdateUserError;
     fn from_data(req: &Request, data: Data) -> data::Outcome<UpdateUserInput, Self::Error> {
-        let unwrapped_json = Json::<UpdateUserRequestWrapper>::from_data(&req, data);
+        let unwrapped_json = Json::<UpdateUserInput>::from_data(&req, data);
 
         if let Outcome::Failure(error) = unwrapped_json {
             let (_, serde_error) = error;
@@ -282,9 +208,8 @@ impl FromData for UpdateUserInput {
             ));
         }
 
-        let json = unwrapped_json.unwrap().0.user;
-        let payload = UpdateUserInput::from(json);
-        Outcome::Success(payload)
+        let json = unwrapped_json.unwrap().0;
+        Outcome::Success(json)
     }
 }
 

@@ -3,7 +3,7 @@ use chrono::Local;
 use core::types::user::*;
 use core::types::token::*;
 use db::pool::*;
-use core::types::RepoError;
+use core::types::error::RepoError;
 use settings::Auth;
 
 pub struct MysqlTokenRepo<'a> {

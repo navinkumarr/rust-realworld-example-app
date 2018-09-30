@@ -6,10 +6,8 @@ use core::usecases::get_current_user::*;
 use core::usecases::register_user::*;
 use core::usecases::login_user::*;
 use core::usecases::update_user::*;
-use core::types::io::get_current_user::*;
-use core::types::io::register_user::*;
-use core::types::io::login_user::*;
-use core::types::io::update_user::*;
+use core::types::user::*;
+use core::types::error::*;
 use db::{DbConn, MysqlUserRepo, MysqlTokenRepo};
 
 #[get("/", format = "application/json")]
@@ -20,8 +18,9 @@ fn current_user_handler(
 ) -> ApiResult<CurrentUserOutput, CurrentUserError> {
     println!("{:?}", current_user);
     let user_repo = MysqlUserRepo::new(&db);
+    let current_user_input = CurrentUserInput { user: current_user };
     ApiResult(get_current_user(
-        current_user,
+        current_user_input,
         &user_repo,
     ))
 }

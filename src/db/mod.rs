@@ -1,7 +1,7 @@
 use diesel::result::Error as DieselError;
 use std::error::Error as StdError;
 use jwt::Error as JWTError;
-use core::types::RepoError;
+use core::types::error::RepoError;
 
 mod models;
 mod repo;

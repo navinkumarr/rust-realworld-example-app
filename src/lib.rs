@@ -15,6 +15,8 @@ extern crate serde_derive;
 #[macro_use]
 extern crate serde_json;
 extern crate frank_jwt as jwt;
+#[macro_use]
+extern crate failure;
 
 pub mod settings;
 pub mod http;

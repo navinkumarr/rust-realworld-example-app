@@ -1,5 +1,5 @@
 use core::types::user::*;
-use core::types::io::update_user::*;
+use core::types::error::*;
 
 pub fn update_user<U>(
     current_user: CurrentUser,
@@ -9,17 +9,9 @@ pub fn update_user<U>(
 where 
     U: UserRepo
 {
-    let user = UpdateUser {
-        username : update_user_input.username,
-        email : update_user_input.email,
-        password : update_user_input.password,
-        bio : update_user_input.bio,
-        image : update_user_input.image,
-    };
-    
-    let data = user_repo.update_user(&current_user.username, &user)?;
+    let data = user_repo.update_user(&current_user.username, &update_user_input.user)?;
 
     println!("{:?}", data);
     
-    Ok(UpdateUserOutput { user })
+    Ok(UpdateUserOutput { user: update_user_input.user })
 }

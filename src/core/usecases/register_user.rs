@@ -1,5 +1,5 @@
 use core::types::user::*;
-use core::types::io::register_user::*;
+use core::types::error::*;
 
 pub fn register_user<U>(
     register_user_input: RegisterUserInput,
@@ -8,15 +8,9 @@ pub fn register_user<U>(
 where 
     U: UserRepo
 {
-    let user = NewUser {
-        username : register_user_input.username,
-        email : register_user_input.email,
-        password : register_user_input.password,
-    };
-    
-    let data = user_repo.save_new_user(&user)?;
+    let data = user_repo.save_new_user(&register_user_input.user)?;
 
     println!("{:?}", data);
     
-    Ok(RegisterUserOutput { user })
+    Ok(RegisterUserOutput { user: register_user_input.user })
 }

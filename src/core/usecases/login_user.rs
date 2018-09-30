@@ -1,6 +1,6 @@
 use core::types::user::*;
-use core::types::io::login_user::*;
 use core::types::token::*;
+use core::types::error::*;
 
 pub fn login_user<U, T>(
     login_user_input: LoginUserInput,
@@ -11,13 +11,8 @@ where
     U: UserRepo,
     T: TokenRepo
 {
-    let login_user = LoginUser {
-        email : login_user_input.email,
-        password : login_user_input.password,
-    };
-    
-    let user = user_repo.find_user_by_credentials(&login_user)?;
-    let email_user = user_repo.find_user_by_email(&login_user.email)?;
+    let user = user_repo.find_user_by_credentials(&login_user_input.user)?;
+    let email_user = user_repo.find_user_by_email(&login_user_input.user.email)?;
 
     println!("email user {:?}", email_user);
 
