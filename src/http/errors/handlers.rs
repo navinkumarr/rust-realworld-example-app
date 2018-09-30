@@ -13,7 +13,7 @@ pub fn bad_request(_err: Error, req: &Request) -> Json<ErrorWrapper> {
             message: String::from("Incomplete Or Invalid Parameter Exception"),
             message_shortcode: String::from("incomplete_or_invalid_parameter"),
             datetime: date.format("%Y%m%d%H%M%S").to_string(),
-            url: String::from(req.uri().as_str()),
+            // url: String::from(req.uri().as_str()),
             error_type: String::from("IncompleteOrInvalidParameterException"),
         },
     })
@@ -28,7 +28,7 @@ pub fn unauthenticated(_err: Error, req: &Request) -> Json<ErrorWrapper> {
             message: String::from("Authorization Required"),
             message_shortcode: String::from("unauthenticated"),
             datetime: date.format("%Y%m%d%H%M%S").to_string(),
-            url: String::from(req.uri().as_str()),
+            // url: String::from(req.uri().as_str()),
             error_type: String::from("AuthorizationRequired"),
         },
     })
@@ -43,7 +43,7 @@ pub fn unauthorized(_err: Error, req: &Request) -> Json<ErrorWrapper> {
             message: String::from("Unauthorized"),
             message_shortcode: String::from("unauthorized"),
             datetime: date.format("%Y%m%d%H%M%S").to_string(),
-            url: String::from(req.uri().as_str()),
+            // url: String::from(req.uri().as_str()),
             error_type: String::from("UnauthorizedException"),
         },
     })
@@ -58,7 +58,7 @@ pub fn not_found(_err: Error, req: &Request) -> Json<ErrorWrapper> {
             message: String::from("Not Found"),
             message_shortcode: String::from("not_found"),
             datetime: date.format("%Y%m%d%H%M%S").to_string(),
-            url: String::from(req.uri().as_str()),
+            // url: String::from(req.uri().as_str()),
             error_type: String::from("NotFound"),
         },
     })
@@ -74,7 +74,7 @@ pub fn unprocessable_entity(_err: Error, req: &Request) -> Json<ErrorWrapper> {
             message: String::from("Unprocessable Entity"),
             message_shortcode: String::from("unprocessable_entity"),
             datetime: date.format("%Y%m%d%H%M%S").to_string(),
-            url: String::from(req.uri().as_str()),
+            // url: String::from(req.uri().as_str()),
             error_type: String::from("UnprocessableEntity"),
         },
     })
@@ -89,7 +89,7 @@ pub fn internal_server_error(_err: Error, req: &Request) -> Json<ErrorWrapper> {
             message: String::from("Internal Server Error"),
             message_shortcode: String::from("internal_server_error"),
             datetime: date.format("%Y%m%d%H%M%S").to_string(),
-            url: String::from(req.uri().as_str()),
+            // url: String::from(req.uri().as_str()),
             error_type: String::from("InternalServerError"),
         },
     })

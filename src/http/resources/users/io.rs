@@ -13,6 +13,10 @@ use rocket;
 use serde_json;
 use http::api::ApiResult;
 
+// @TODO: Refactor this file
+
+// -- Register user
+
 impl FromData for RegisterUserInput {
     type Error = RegisterUserError;
     fn from_data(req: &Request, data: Data) -> data::Outcome<RegisterUserInput, Self::Error> {
@@ -32,6 +36,34 @@ impl FromData for RegisterUserInput {
     }
 }
 
+impl<'r> Responder<'r> for ApiResult<RegisterUserOutput, RegisterUserError> {
+    fn respond_to(self, req: &Request) -> Result<rocket::Response<'r>, Status> {
+        let date = Local::now();
+
+        let mut build = Response::build();
+
+        match self.0 {
+            Ok(output) => {
+                build
+                    .merge(response::content::Json(serde_json::to_string(&output)).respond_to(req)?);
+                build.status(Status::Ok).ok()
+            }
+            Err(err) => {
+                let err_response = match err {
+                    RegisterUserError::RepoError(message) => ErrorWrapper::repo_error(message),
+                    RegisterUserError::InvalidInput(message) => ErrorWrapper::invalid_input(message),
+                };
+                build.merge(
+                    response::content::Json(serde_json::to_string(&err_response)).respond_to(req)?,
+                );
+                build.status(Status::BadRequest).ok()
+            }
+        }
+    }
+}
+
+// -- Current user
+
 impl<'r> Responder<'r> for ApiResult<CurrentUserOutput, CurrentUserError> {
     fn respond_to(self, req: &Request) -> Result<rocket::Response<'r>, Status> {
         let date = Local::now();
@@ -46,26 +78,8 @@ impl<'r> Responder<'r> for ApiResult<CurrentUserOutput, CurrentUserError> {
             }
             Err(err) => {
                 let err_response = match err {
-                    CurrentUserError::RepoError(message) => ErrorWrapper {
-                        error: ErrorDetails {
-                            status: 400,
-                            message: String::from(message),
-                            message_shortcode: String::from("repo_error"),
-                            datetime: date.format("%Y%m%d%H%M%S").to_string(),
-                            url: String::from(req.uri().as_str()),
-                            error_type: String::from("RepoError"),
-                        },
-                    },
-                    CurrentUserError::InvalidInput(message) => ErrorWrapper {
-                        error: ErrorDetails {
-                            status: 400,
-                            message: String::from(message),
-                            message_shortcode: String::from("invalid_input"),
-                            datetime: date.format("%Y%m%d%H%M%S").to_string(),
-                            url: String::from(req.uri().as_str()),
-                            error_type: String::from("IncompleteOrInvalidParameterException"),
-                        },
-                    },
+                    CurrentUserError::RepoError(message) => ErrorWrapper::repo_error(message),
+                    CurrentUserError::InvalidInput(message) => ErrorWrapper::invalid_input(message),
                 };
                 build.merge(
                     response::content::Json(serde_json::to_string(&err_response)).respond_to(req)?,
@@ -76,6 +90,7 @@ impl<'r> Responder<'r> for ApiResult<CurrentUserOutput, CurrentUserError> {
     }
 }
 
+// -- Login user
 impl FromData for LoginUserInput {
     type Error = LoginUserError;
     fn from_data(req: &Request, data: Data) -> data::Outcome<LoginUserInput, Self::Error> {
@@ -96,50 +111,6 @@ impl FromData for LoginUserInput {
 }
 
 
-impl<'r> Responder<'r> for ApiResult<RegisterUserOutput, RegisterUserError> {
-    fn respond_to(self, req: &Request) -> Result<rocket::Response<'r>, Status> {
-        let date = Local::now();
-
-        let mut build = Response::build();
-
-        match self.0 {
-            Ok(output) => {
-                build
-                    .merge(response::content::Json(serde_json::to_string(&output)).respond_to(req)?);
-                build.status(Status::Ok).ok()
-            }
-            Err(err) => {
-                let err_response = match err {
-                    RegisterUserError::RepoError(message) => ErrorWrapper {
-                        error: ErrorDetails {
-                            status: 400,
-                            message: String::from(message),
-                            message_shortcode: String::from("repo_error"),
-                            datetime: date.format("%Y%m%d%H%M%S").to_string(),
-                            url: String::from(req.uri().as_str()),
-                            error_type: String::from("RepoError"),
-                        },
-                    },
-                    RegisterUserError::InvalidInput(message) => ErrorWrapper {
-                        error: ErrorDetails {
-                            status: 400,
-                            message: String::from(message),
-                            message_shortcode: String::from("invalid_input"),
-                            datetime: date.format("%Y%m%d%H%M%S").to_string(),
-                            url: String::from(req.uri().as_str()),
-                            error_type: String::from("IncompleteOrInvalidParameterException"),
-                        },
-                    },
-                };
-                build.merge(
-                    response::content::Json(serde_json::to_string(&err_response)).respond_to(req)?,
-                );
-                build.status(Status::BadRequest).ok()
-            }
-        }
-    }
-}
-
 impl<'r> Responder<'r> for ApiResult<LoginUserOutput, LoginUserError> {
     fn respond_to(self, req: &Request) -> Result<rocket::Response<'r>, Status> {
         let date = Local::now();
@@ -154,36 +125,9 @@ impl<'r> Responder<'r> for ApiResult<LoginUserOutput, LoginUserError> {
             }
             Err(err) => {
                 let err_response = match err {
-                    LoginUserError::RepoError(message) => ErrorWrapper {
-                        error: ErrorDetails {
-                            status: 400,
-                            message: String::from(message),
-                            message_shortcode: String::from("repo_error"),
-                            datetime: date.format("%Y%m%d%H%M%S").to_string(),
-                            url: String::from(req.uri().as_str()),
-                            error_type: String::from("RepoError"),
-                        },
-                    },
-                    LoginUserError::InvalidInput(message) => ErrorWrapper {
-                        error: ErrorDetails {
-                            status: 400,
-                            message: String::from(message),
-                            message_shortcode: String::from("invalid_input"),
-                            datetime: date.format("%Y%m%d%H%M%S").to_string(),
-                            url: String::from(req.uri().as_str()),
-                            error_type: String::from("IncompleteOrInvalidParameterException"),
-                        },
-                    },
-                    LoginUserError::InvalidCredentials => ErrorWrapper {
-                        error: ErrorDetails {
-                            status: 400,
-                            message: String::from("Invalid credentials"),
-                            message_shortcode: String::from("invalid_credentials"),
-                            datetime: date.format("%Y%m%d%H%M%S").to_string(),
-                            url: String::from(req.uri().as_str()),
-                            error_type: String::from("IncompleteOrInvalidParameterException"),
-                        },
-                    },
+                    LoginUserError::RepoError(message) => ErrorWrapper::repo_error(message),
+                    LoginUserError::InvalidInput(message) => ErrorWrapper::invalid_input(message),
+                    LoginUserError::InvalidCredentials => ErrorWrapper::invalid_input(String::from("Invalid credentials")),
                 };
                 build.merge(
                     response::content::Json(serde_json::to_string(&err_response)).respond_to(req)?,
@@ -193,6 +137,8 @@ impl<'r> Responder<'r> for ApiResult<LoginUserOutput, LoginUserError> {
         }
     }
 }
+
+// -- Update user
 
 impl FromData for UpdateUserInput {
     type Error = UpdateUserError;
@@ -227,26 +173,8 @@ impl<'r> Responder<'r> for ApiResult<UpdateUserOutput, UpdateUserError> {
             }
             Err(err) => {
                 let err_response = match err {
-                    UpdateUserError::RepoError(message) => ErrorWrapper {
-                        error: ErrorDetails {
-                            status: 400,
-                            message: String::from(message),
-                            message_shortcode: String::from("repo_error"),
-                            datetime: date.format("%Y%m%d%H%M%S").to_string(),
-                            url: String::from(req.uri().as_str()),
-                            error_type: String::from("RepoError"),
-                        },
-                    },
-                    UpdateUserError::InvalidInput(message) => ErrorWrapper {
-                        error: ErrorDetails {
-                            status: 400,
-                            message: String::from(message),
-                            message_shortcode: String::from("invalid_input"),
-                            datetime: date.format("%Y%m%d%H%M%S").to_string(),
-                            url: String::from(req.uri().as_str()),
-                            error_type: String::from("IncompleteOrInvalidParameterException"),
-                        },
-                    },
+                    UpdateUserError::RepoError(message) => ErrorWrapper::repo_error(message),
+                    UpdateUserError::InvalidInput(message) => ErrorWrapper::invalid_input(message)
                 };
                 build.merge(
                     response::content::Json(serde_json::to_string(&err_response)).respond_to(req)?,

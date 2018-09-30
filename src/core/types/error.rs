@@ -1,3 +1,6 @@
+// @TODO: Rethink about errors
+
+
 #[derive(Debug, Serialize, Fail)]
 pub enum RepoError {
     #[fail(display = "repo error: {}", _0)]
