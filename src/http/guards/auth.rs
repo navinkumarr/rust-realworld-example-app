@@ -22,7 +22,12 @@ impl<'a, 'r> FromRequest<'a, 'r> for CurrentUser {
             .and_then(|(_header, payload)| {
                 payload.get("sub")
                     .and_then(|sub| {
-                        Some(Outcome::Success(CurrentUser{ username: String::from(sub.as_str().unwrap_or(""))}))
+                        payload.get("id").and_then(|id| {
+                            Some(Outcome::Success(CurrentUser{ 
+                                username: String::from(sub.as_str().unwrap_or("")),
+                                id: id.as_str().unwrap_or("0").parse::<u32>().unwrap(),
+                            }))
+                        })
                     })
             })
             .unwrap_or(Outcome::Failure((Status::Unauthorized, ())))

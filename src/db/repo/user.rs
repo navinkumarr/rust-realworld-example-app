@@ -29,6 +29,7 @@ impl<'a> UserRepo for MysqlUserRepo<'a> {
         if result_users.len() > 0 {
             let m = result_users.pop().unwrap();
             Ok(Some(User {
+                id : m.id,
                 username : m.username,
                 email : m.email,
                 password : m.password,
@@ -56,6 +57,7 @@ impl<'a> UserRepo for MysqlUserRepo<'a> {
         if result_users.len() > 0 {
             let m = result_users.pop().unwrap();
             Ok(Some(User {
+                id: m.id,
                 username : m.username,
                 email : m.email,
                 password : m.password,
@@ -107,6 +109,7 @@ impl<'a> UserRepo for MysqlUserRepo<'a> {
         if result_users.len() > 0 {
             let m = result_users.pop().unwrap();
             Ok(Some(User {
+                id: m.id, 
                 username : m.username,
                 email : m.email,
                 password : m.password,

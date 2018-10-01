@@ -64,3 +64,17 @@ impl From<RepoError> for UpdateUserError {
         UpdateUserError::RepoError(e.to_string())
     }
 }
+
+#[derive(Debug, Serialize, Fail)]
+pub enum CreateArticleError {
+    #[fail(display = "invalid input: {}", _0)]
+    InvalidInput(String),
+    #[fail(display = "repo error: {}", _0)]
+    RepoError(String),
+}
+
+impl From<RepoError> for CreateArticleError {
+    fn from(e: RepoError) -> CreateArticleError {
+        CreateArticleError::RepoError(e.to_string())
+    }
+}

@@ -25,6 +25,7 @@ impl<'a> TokenRepo for MysqlTokenRepo<'a> {
         let payload = json!({
             "iss" : self.settings.issuer,
             "sub" : user.username,
+            "uid" : user.id,
             "iat" : Local::now().timestamp(),
             "exp" : Local::now().timestamp() + self.settings.expiry
         });

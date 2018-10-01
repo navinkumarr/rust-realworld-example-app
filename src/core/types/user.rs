@@ -3,6 +3,7 @@ use core::types::error::RepoError;
 #[derive(Debug, Serialize, Deserialize)]
 #[derive(Default)]
 pub struct User {
+    pub id : u32,
     pub username : String,
     pub email : String,
     pub password : String,
@@ -16,6 +17,7 @@ pub struct User {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CurrentUser {
     pub username : String,
+    pub id : u32,
 }
 
 #[derive(Debug, Deserialize)]
