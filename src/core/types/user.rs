@@ -1,7 +1,6 @@
 use core::types::error::RepoError;
 
-#[derive(Debug, Serialize, Deserialize)]
-#[derive(Default)]
+#[derive(Default, Debug, Serialize, Deserialize)]
 pub struct User {
     pub id : u32,
     pub username : String,
@@ -10,6 +9,25 @@ pub struct User {
     pub token : Option<String>,
     pub bio : Option<String>,
     pub image : Option<String>,
+}
+
+#[derive(Default, Debug, Serialize, Deserialize)]
+pub struct Profile {
+    pub username : String,
+    pub bio : Option<String>,
+    pub image : Option<String>,
+    pub following : bool,
+}
+
+impl From<(User, bool)> for Profile {
+    fn from((user, following): (User, bool)) -> Profile{
+        Profile {
+            username: user.username,
+            bio: user.bio,
+            image: user.image,
+            following
+        }
+    }
 }
 
 // -- Current user

@@ -20,5 +20,4 @@ config = "0.8"
 frank_jwt = "3.0.0"
 failure = "0.1.2"
 failure_derive = "0.1.2"
-
-
+slugify = "0.1.0"

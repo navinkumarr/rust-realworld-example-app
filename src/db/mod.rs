@@ -23,3 +23,4 @@ impl From<JWTError> for RepoError {
 pub use self::pool::*;
 pub use self::repo::user::MysqlUserRepo;
 pub use self::repo::token::MysqlTokenRepo;
+pub use self::repo::article::MysqlArticleRepo;

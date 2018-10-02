@@ -17,6 +17,8 @@ extern crate serde_json;
 extern crate frank_jwt as jwt;
 #[macro_use]
 extern crate failure;
+#[macro_use]
+extern crate slugify;
 
 pub mod settings;
 pub mod http;
