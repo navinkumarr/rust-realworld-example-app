@@ -20,12 +20,15 @@ impl<'a, 'r> FromRequest<'a, 'r> for CurrentUser {
                 decode(&token.to_string(), &secret, Algorithm::HS256).ok()
             })
             .and_then(|(_header, payload)| {
+                println!("header {:?} payload {:?}", _header, payload);
                 payload.get("sub")
                     .and_then(|sub| {
-                        payload.get("id").and_then(|id| {
+                        println!("sub {:?}", sub);
+                        payload.get("uid").and_then(|uid| {
+                            println!("id {:?}", uid);
                             Some(Outcome::Success(CurrentUser{ 
                                 username: String::from(sub.as_str().unwrap_or("")),
-                                id: id.as_str().unwrap_or("0").parse::<u32>().unwrap(),
+                                id: uid.as_str().unwrap_or("0").parse::<u32>().unwrap(),
                             }))
                         })
                     })

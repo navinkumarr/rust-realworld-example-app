@@ -25,12 +25,13 @@ impl<'a> ArticleRepo for MysqlArticleRepo<'a> {
         current_user: &CurrentUser,
     ) -> Result<Article, RepoError> {
         let date_time = utils::YmdHMS();
+        let slug = new_article.slug.as_ref().unwrap().clone();
 
         let data_articles = InsertArticle {
-            title: new_article.title,
-            slug: new_article.slug.unwrap(),
-            description: new_article.description,
-            body: new_article.body,
+            title: &new_article.title,
+            slug: &slug,
+            description: &new_article.description,
+            body: &new_article.body,
             user_id: current_user.id,
             created_at: date_time,
             updated_at: date_time,
@@ -44,7 +45,7 @@ impl<'a> ArticleRepo for MysqlArticleRepo<'a> {
         // https://github.com/diesel-rs/diesel/issues/1011
         let query_articles_id = articles::table
             .filter(articles::user_id.eq(&current_user.id))
-            .filter(articles::slug.eq(&new_article.slug.unwrap()))
+            .filter(articles::slug.eq(&slug))
             .select(articles::id)
             .first::<u32>(&*self.db_conn.master)?;
 
@@ -75,12 +76,12 @@ impl<'a> ArticleRepo for MysqlArticleRepo<'a> {
         };
 
         let result_articles = Article {
-            slug: new_article.slug.unwrap(),
-            title: new_article.title,
-            description: new_article.description,
-            body: new_article.body,
+            slug: slug.clone(),
+            title: new_article.title.clone(),
+            description: new_article.description.clone(),
+            body: new_article.body.clone(),
             user_id: current_user.id,
-            tag_list: new_article.tag_list,
+            tag_list: new_article.tag_list.clone(),
             created_at: date_time,
             updated_at: date_time,
             ..Article::default()

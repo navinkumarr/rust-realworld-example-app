@@ -19,11 +19,11 @@ pub struct QueryArticle {
 
 #[derive(Default, Insertable, Debug)]
 #[table_name = "articles"]
-pub struct InsertArticle {
-    pub title: String,
-    pub slug: String,
-    pub description: String,
-    pub body: String,
+pub struct InsertArticle<'a> {
+    pub title: &'a str,
+    pub slug: &'a str,
+    pub description: &'a str,
+    pub body: &'a str,
     pub user_id: u32,
     pub created_at: u64,
     pub updated_at: u64,

@@ -39,6 +39,7 @@ pub struct NewArticle {
     pub description: String,
     pub body: String,
     pub slug: Option<String>,
+    #[serde(rename = "tagList")]
     pub tag_list: Vec<String>,
 }
 
