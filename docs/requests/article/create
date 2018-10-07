@@ -1,0 +1,3 @@
+cd http://localhost:8000/api/articles
+'article:={"body": "Very carefully.", "description": "Ever wonder how?", "tagList": ["dragons", "training"], "title": "How to train your dragon"}'
+'Authorization:Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mzg4MTg4MjksImlhdCI6MTUzODgxNjQyOSwiaXNzIjoicmVhbHdvcmxkIiwic3ViIjoibmF2aW4iLCJ1aWQiOjF9.fr9bIpds2qaE13ju__A0w0RDZGPggu8DSPVVM3oi1bg='

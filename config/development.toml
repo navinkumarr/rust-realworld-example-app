@@ -5,3 +5,6 @@ database_url= "mysql://root:root@127.0.0.1:3306/realworld_example_app"
 secret= "realworld"
 issuer= "realworld"
 expiry= 2400
+
+[log]
+filter= "rust_realworld_example_app"

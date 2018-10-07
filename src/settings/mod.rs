@@ -14,9 +14,15 @@ pub struct Auth {
 }
 
 #[derive(Debug, Deserialize)]
+pub struct Log {
+    pub filter: String,
+}
+
+#[derive(Debug, Deserialize)]
 pub struct Settings {
     pub database: Database,
     pub auth: Auth,
+    pub log: Log,
 }
 
 impl Settings {

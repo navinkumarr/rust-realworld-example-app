@@ -19,6 +19,9 @@ extern crate frank_jwt as jwt;
 extern crate failure;
 #[macro_use]
 extern crate slugify;
+#[macro_use]
+extern crate log;
+extern crate env_logger;
 
 pub mod settings;
 pub mod http;
@@ -26,8 +29,13 @@ pub mod core;
 pub mod db;
 
 use settings::Settings;
+use log::Level;
 
 pub fn init() {
     let settings = Settings::new().unwrap();
+    let env = env_logger::Env::default()
+        .filter_or(env_logger::DEFAULT_FILTER_ENV, settings.log.filter.clone());
+    env_logger::Builder::from_env(env).init();
+
     http::api::main(settings);
 }
