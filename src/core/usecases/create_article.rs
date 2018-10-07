@@ -20,7 +20,7 @@ where
     //Since user is logged in we can unwrap
     let article_with_author = ArticleWithAuthor::from((article, user.unwrap()));
 
-    println!("{:?}", article_with_author);
+    debug!("{:?}", article_with_author);
     
     Ok(CreateArticleOutput { article: article_with_author })
 }

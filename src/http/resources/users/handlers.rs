@@ -16,7 +16,7 @@ fn current_user_handler(
     db: DbConn,
     _settings: State<Settings>,
 ) -> ApiResult<CurrentUserOutput, CurrentUserError> {
-    println!("{:?}", current_user);
+    debug!("{:?}", current_user);
     let user_repo = MysqlUserRepo::new(&db);
     let current_user_input = CurrentUserInput { user: current_user };
     ApiResult(get_current_user(

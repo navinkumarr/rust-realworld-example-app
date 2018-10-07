@@ -104,7 +104,7 @@ impl<'a> UserRepo for MysqlUserRepo<'a> {
             .filter(users::password.eq(&credentials.password))
             .load::<QueryUser>(&*self.db_conn.master)?;
 
-        println!("result_users {:?}", result_users);
+        debug!("result_users {:?}", result_users);
 
         if result_users.len() > 0 {
             let m = result_users.pop().unwrap();

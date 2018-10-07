@@ -10,7 +10,7 @@ where
 {
     let user = user_repo.find_user_by_username(&current_user_input.user.username)?;
 
-    println!("fetched user {:?}", user);
+    debug!("fetched user {:?}", user);
 
     if user.is_some() {
         Ok(CurrentUserOutput { user: user.unwrap() })

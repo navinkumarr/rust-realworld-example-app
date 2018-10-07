@@ -16,19 +16,19 @@ impl<'a, 'r> FromRequest<'a, 'r> for CurrentUser {
         request.headers().get_one("Authorization")
             .and_then(|token| {
                 let token = if token.len() > 6 {&token[6..]} else {""}; // "Token JWTToken"
-                info!("token {:?}", token);
+                debug!("token {:?}", token);
                 decode(&token.to_string(), &secret, Algorithm::HS256).ok()
             })
             .and_then(|(_header, payload)| {
-                info!("header {:?} payload {:?}", _header, payload);
+                debug!("header {:?} payload {:?}", _header, payload);
                 payload.get("sub")
                     .and_then(|sub| {
-                        info!("sub {:?}", sub);
+                        debug!("sub {:?}", sub);
                         payload.get("uid").and_then(|uid| {
-                            info!("id {:?}", uid);
+                            debug!("id {:?}", uid);
                             Some(Outcome::Success(CurrentUser{ 
-                                username: String::from(sub.as_str().unwrap_or("")),
-                                id: uid.as_str().unwrap_or("0").parse::<u32>().unwrap(),
+                                username: String::from(sub.as_str()?),
+                                id: uid.as_u64()? as u32,
                             }))
                         })
                     })

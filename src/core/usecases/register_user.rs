@@ -10,7 +10,7 @@ where
 {
     let data = user_repo.save_new_user(&register_user_input.user)?;
 
-    println!("{:?}", data);
+    debug!("{:?}", data);
     
     Ok(RegisterUserOutput { user: register_user_input.user })
 }

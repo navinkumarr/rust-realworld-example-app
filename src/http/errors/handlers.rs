@@ -67,7 +67,7 @@ pub fn not_found(_err: Error, req: &Request) -> Json<ErrorWrapper> {
 #[catch(422)]
 pub fn unprocessable_entity(_err: Error, req: &Request) -> Json<ErrorWrapper> {
     let date = Local::now();
-    println!("{:?}", _err);
+    debug!("{:?}", _err);
     Json(ErrorWrapper {
         error: ErrorDetails {
             status: 422,

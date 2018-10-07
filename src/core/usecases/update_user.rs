@@ -11,7 +11,7 @@ where
 {
     let data = user_repo.update_user(&current_user.username, &update_user_input.user)?;
 
-    println!("{:?}", data);
+    debug!("{:?}", data);
     
     Ok(UpdateUserOutput { user: update_user_input.user })
 }

@@ -37,6 +37,8 @@ impl<'a> ArticleRepo for MysqlArticleRepo<'a> {
             updated_at: date_time,
         };
 
+        debug!("data_articles {:?}", data_articles);
+
         diesel::insert_into(articles::table)
             .values(&data_articles)
             .execute(&*self.db_conn.master)?;
@@ -48,6 +50,8 @@ impl<'a> ArticleRepo for MysqlArticleRepo<'a> {
             .filter(articles::slug.eq(&slug))
             .select(articles::id)
             .first::<u32>(&*self.db_conn.master)?;
+
+        debug!("query_articles_id {}", query_articles_id);
 
         for name in &new_article.tag_list{
             let insert_tag = InsertTag {

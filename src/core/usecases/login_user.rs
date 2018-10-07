@@ -14,14 +14,14 @@ where
     let user = user_repo.find_user_by_credentials(&login_user_input.user)?;
     let email_user = user_repo.find_user_by_email(&login_user_input.user.email)?;
 
-    println!("email user {:?}", email_user);
+    debug!("email user {:?}", email_user);
 
     if user.is_some() {
         let mut user = user.unwrap();
         let token = token_repo.create_login_token(&user)?;
-        println!("{:?}", token);
+        debug!("{:?}", token);
         user.token = Some(token);
-        println!("{:?}", user);
+        debug!("{:?}", user);
         Ok(LoginUserOutput { user })
     }else{
         Err(LoginUserError::InvalidCredentials)
